@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="Fije">
+  <rect width="180" height="180" rx="42" fill="#8B7EB8"/>
+  <g fill="none" stroke="#ffffff" stroke-width="126" stroke-linecap="round" stroke-linejoin="round"
+     transform="translate(41.6 18.3) scale(0.1437)">
+    <path d="M266,847 C258,847 242,838 242,805 L242,295 C242,215 270,160 340,151 C410,142 432,190 432,235 C432,265 424,285 412,291"/>
+    <path d="M242,466 L329,466"/>
+  </g>
+</svg>

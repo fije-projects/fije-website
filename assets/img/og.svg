@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Fije — consulenza Salesforce">
+  <rect width="1200" height="630" fill="#FAF8FC"/>
+
+  <!-- thread motif -->
+  <g fill="none" stroke="#8B7EB8" stroke-width="3" stroke-linecap="round" opacity="0.5">
+    <path d="M-60,470 C 260,470 340,150 620,150 S 980,470 1080,320 S 1240,150 1360,220"/>
+  </g>
+  <circle cx="-40" cy="468" r="6" fill="#D67DA8"/>
+
+  <!-- symbol -->
+  <g fill="none" stroke="#8B7EB8" stroke-width="33" stroke-linecap="round" stroke-linejoin="round"
+     transform="translate(92 168) scale(0.38)">
+    <path d="M266,847 C258,847 242,838 242,805 L242,295 C242,215 270,160 340,151 C410,142 432,190 432,235 C432,265 424,285 412,291"/>
+    <path d="M242,466 L329,466"/>
+  </g>
+
+  <!-- text -->
+  <text x="300" y="300" font-family="Georgia, 'Times New Roman', serif" font-size="74" font-weight="600" fill="#241F2A">fije</text>
+  <text x="300" y="372" font-family="Helvetica, Arial, sans-serif" font-size="33" fill="#6B6674">Salesforce, quando il progetto non è semplice.</text>
+  <text x="300" y="424" font-family="Helvetica, Arial, sans-serif" font-size="25" fill="#8B7EB8">Architettura &#183; sviluppo &#183; revisione tecnica &#183; dal 2012</text>
+</svg>

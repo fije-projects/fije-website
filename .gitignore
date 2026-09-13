@@ -1,0 +1,11 @@
+.DS_Store
+
+# Internal planning/workspace docs — kept local for our own use, not published
+# to the public repo (client-naming reasoning, personal notes, drafts).
+# See PLAN.md / DECISIONS.md on disk; nothing here is deleted, just untracked.
+DECISIONS.md
+PLAN.md
+README.md
+hosting.md
+wireframe.html
+content/
