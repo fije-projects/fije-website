@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Privacy Policy — Fije Log Explorer for Salesforce</title>
+<meta name="description" content="Privacy policy for the Fije Log Explorer for Salesforce Chrome extension: what it does, what data it touches, and why.">
+<link rel="canonical" href="https://fije.it/log-explorer/privacy/">
+
+<meta name="theme-color" content="#FAF8FC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1E1A24" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="stylesheet" href="/assets/css/style.css">
+
+<style>
+  .legal { padding-block: clamp(3rem, 8vw, 5rem); }
+  .legal .brand-mark { height: 2.2rem; color: var(--brand); margin-bottom: 1.5rem; }
+  .legal .eyebrow { margin-bottom: .5rem; }
+  .legal .updated { color: var(--muted); font-size: .9rem; margin-top: -.5rem; }
+  .legal h2 { margin-top: 2.5rem; font-size: 1.25rem; }
+  .legal ul { padding-left: 1.2rem; }
+  .legal li + li { margin-top: .6rem; }
+  .legal table { width: 100%; border-collapse: collapse; margin-block: 1rem; font-size: .95rem; }
+  .legal th, .legal td { text-align: left; padding: .6rem .8rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .legal th { color: var(--muted); font-weight: 600; }
+  .legal .back { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+  .legal code { background: var(--tint); padding: .1em .4em; border-radius: 4px; font-size: .9em; }
+</style>
+</head>
+<body>
+
+<main class="container legal measure">
+  <a href="/" aria-label="Fije — home">
+    <svg class="brand-mark" viewBox="180 100 300 800" aria-hidden="true">
+      <g fill="none" stroke="currentColor" stroke-width="33" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M266,847 C258,847 242,838 242,805 L242,295 C242,215 270,160 340,151 C410,142 432,190 432,235 C432,265 424,285 412,291"/>
+        <path d="M242,466 L329,466"/>
+      </g>
+    </svg>
+  </a>
+
+  <p class="eyebrow">Fije Log Explorer for Salesforce</p>
+  <h1>Privacy Policy</h1>
+  <p class="updated">Last updated: 2 September 2026</p>
+
+  <p class="lede">In short: this extension does not collect, store, or transmit any
+    personal or business data to third parties. There is no server operated by the
+    author — it runs entirely in your browser.</p>
+
+  <h2>Data handled</h2>
+  <ul>
+    <li><strong>Salesforce session (<code>sid</code>):</strong> the extension reads the
+      session cookie of the Salesforce org you already have open in a tab, and uses it
+      as an <code>Authorization: Bearer</code> token to call the Tooling/REST API of
+      <strong>that same org</strong>. The token is never written to disk nor sent
+      anywhere other than your org's own Salesforce domains
+      (<code>*.salesforce.com</code>, <code>*.force.com</code>).</li>
+    <li><strong>Debug log content and user records</strong> fetched from the org live
+      only in memory in the extension's tab and are discarded when the tab is closed or
+      a new search is run. Nothing is persisted — <code>chrome.storage</code> is not used.</li>
+    <li><strong>No telemetry, no analytics, no tracking cookies.</strong></li>
+  </ul>
+
+  <h2>Permissions</h2>
+  <table>
+    <thead><tr><th>Permission</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td><code>cookies</code></td><td>Read the <code>sid</code> cookie of the open org to authenticate API calls.</td></tr>
+      <tr><td>Access to <code>*.salesforce.com</code> / <code>*.force.com</code></td><td>Make the Tooling/REST calls to your org.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Contact</h2>
+  <p>Questions about this policy or the extension: <a href="mailto:info@fije.it">info@fije.it</a>.</p>
+
+  <div class="back">
+    <p><a class="btn btn-primary" href="/">← Back to fije.it</a></p>
+  </div>
+</main>
+
+</body>
+</html>
