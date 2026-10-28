@@ -546,7 +546,7 @@ body.nav-open .contact-bar { display: none; }
 
 @media (min-width: 40rem) {
   .why-grid { grid-template-columns: repeat(3, 1fr); }
-  .foot-top { grid-template-columns: 2fr 1fr 1fr; }
+  .foot-top { grid-template-columns: 2fr 1fr 1fr 1fr; }
 }
 
 @media (min-width: 52rem) {

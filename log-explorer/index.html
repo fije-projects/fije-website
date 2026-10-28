@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Fije Log Explorer for Salesforce — free Chrome extension for debug logs</title>
+<meta name="description" content="Search, read and switch on Salesforce debug logs from a browser tab, without going through Setup. Free Chrome extension by Fije: no account, no backend, no data collected.">
+<link rel="canonical" href="https://fije.it/log-explorer/">
+
+<meta name="theme-color" content="#FAF8FC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1E1A24" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Fije">
+<meta property="og:title" content="Fije Log Explorer for Salesforce">
+<meta property="og:description" content="Search, read and switch on Salesforce debug logs from a browser tab. Free Chrome extension, no data collected.">
+<meta property="og:url" content="https://fije.it/log-explorer/">
+<meta property="og:image" content="https://fije.it/log-explorer/img/search.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/hanken-grotesk-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-latin.woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/style.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Fije Log Explorer for Salesforce",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Chrome",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+  "url": "https://fije.it/log-explorer/",
+  "downloadUrl": "https://chromewebstore.google.com/detail/fije-log-explorer-for-sal/pllfgkepokmgdkemmelpdlpdmlejajpg",
+  "publisher": { "@type": "Organization", "name": "Fije", "url": "https://fije.it/" }
+}
+</script>
+
+<style>
+  .le-header .container { gap: 1rem; }
+  .le-header-links { display: flex; align-items: center; gap: 1.2rem; margin-left: auto; }
+  .le-header-links > a:not(.btn) { color: var(--muted); font-size: .95rem; }
+
+  .le-hero { padding-block: clamp(3rem, 7vw, 5rem) clamp(3rem, 6vw, 4.5rem); }
+  .le-hero h1 { font-size: clamp(2.2rem, 5.4vw, 3.6rem); max-width: 18ch; margin: 0 0 1.2rem; }
+  .le-hero h1 em { font-style: normal; color: var(--brand-ink); }
+  .le-hero .hero-lead { max-width: 46ch; }
+  .le-hero .cta-row { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: .8rem; }
+  .le-facts { list-style: none; padding: 0; margin: 1.4rem 0 0; display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; color: var(--muted); font-size: .95rem; }
+  .le-facts li::before { content: "✓"; color: var(--brand-ink); font-weight: 700; margin-right: .45rem; }
+
+  .le-shot {
+    display: block; width: 100%; height: auto;
+    border: 1px solid var(--line); border-radius: 12px;
+    box-shadow: var(--shadow); background: var(--surface);
+  }
+  /* the hero already shows the whole search screen: zoom on the results table here */
+  .le-shot-crop { aspect-ratio: 1196 / 300; object-fit: cover; object-position: 50% 78%; }
+  .le-hero .le-shot { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+
+  .le-features { display: grid; gap: clamp(3rem, 7vw, 5rem); }
+  .le-feature { display: grid; gap: 1.5rem; align-items: center; }
+  .le-feature h3 { font-size: clamp(1.4rem, 2.6vw, 1.75rem); margin: 0 0 .8rem; }
+  .le-feature p { margin: 0 0 .8rem; color: var(--muted); }
+  .le-feature ul { margin: 0; padding-left: 1.1rem; }
+  .le-feature li + li { margin-top: .45rem; }
+  @media (min-width: 60rem) {
+    .le-feature { grid-template-columns: 5fr 7fr; gap: 3.5rem; }
+    .le-feature.flip > :first-child { order: 2; }
+  }
+
+  .le-privacy { display: grid; gap: 1.2rem; grid-template-columns: 1fr; margin: 0; padding: 0; list-style: none; }
+  .le-privacy li { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.4rem; }
+  .le-privacy strong { display: block; margin-bottom: .35rem; }
+  .le-privacy span { color: var(--muted); }
+  @media (min-width: 48rem) { .le-privacy { grid-template-columns: repeat(3, 1fr); } }
+  .le-privacy-note { margin: 1.5rem 0 0; color: var(--muted); font-size: .95rem; }
+
+  .le-how { counter-reset: how; list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; max-width: var(--measure); }
+  .le-how li { counter-increment: how; display: grid; grid-template-columns: 2.4rem 1fr; gap: 1rem; align-items: baseline; }
+  .le-how li::before {
+    content: counter(how); display: grid; place-items: center;
+    width: 2.4rem; height: 2.4rem; border-radius: 50%;
+    border: 1px solid var(--line-strong); color: var(--brand-ink);
+    font-family: var(--font-display); font-weight: 600;
+  }
+  .le-small { margin-top: 2rem; color: var(--muted); font-size: .9rem; max-width: var(--measure); }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header le-header">
+  <div class="container">
+    <a class="brand" href="/" aria-label="Fije — home">
+      <svg class="brand-mark" viewBox="180 100 300 800" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="33" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M266,847 C258,847 242,838 242,805 L242,295 C242,215 270,160 340,151 C410,142 432,190 432,235 C432,265 424,285 412,291"/>
+          <path d="M242,466 L329,466"/>
+        </g>
+      </svg>
+      <span>fije</span>
+    </a>
+    <div class="le-header-links">
+      <a href="/en/">About Fije</a>
+      <a class="btn btn-primary nav-cta" href="https://chromewebstore.google.com/detail/fije-log-explorer-for-sal/pllfgkepokmgdkemmelpdlpdmlejajpg" rel="noopener">Add to Chrome</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="le-hero">
+    <div class="container">
+      <p class="eyebrow">Free Chrome extension · Salesforce</p>
+      <h1>Salesforce debug logs, <em>without the trip through Setup.</em></h1>
+      <p class="hero-lead">Fije Log Explorer opens the latest logs of the org you're working on in their own tab.
+        You can search inside them, read them with colour-coding, and turn logging on for a user in a couple of clicks.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/fije-log-explorer-for-sal/pllfgkepokmgdkemmelpdlpdmlejajpg" rel="noopener">Add to Chrome — it's free</a>
+        <a class="btn btn-ghost" href="#features">See what it does</a>
+      </div>
+      <ul class="le-facts">
+        <li>No account</li>
+        <li>No backend</li>
+        <li>No data collected</li>
+      </ul>
+      <img class="le-shot" src="img/search.png" width="1280" height="800"
+           alt="Fije Log Explorer: list of recent debug logs with a full-text search for SOQL and the matching lines previewed under each log">
+    </div>
+  </section>
+
+  <section class="section section-alt" id="features">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">What it does</p>
+        <h2>From "something broke" to the line that explains it.</h2>
+      </div>
+
+      <div class="le-features">
+        <div class="le-feature">
+          <div>
+            <h3>Find the right log</h3>
+            <p>The extension opens on the org's 30 most recent logs and starts downloading their contents right away, so there's no empty form to fill in.</p>
+            <ul>
+              <li>Filter by user and time window.</li>
+              <li>Full-text search inside the logs. Type a method, an exception or an Id and see the matching lines.</li>
+              <li>Auto-refresh while you re-run the transaction.</li>
+              <li>Exception count and a flag for truncated logs.</li>
+            </ul>
+          </div>
+          <img class="le-shot le-shot-crop" src="img/search.png" width="1280" height="800" loading="lazy"
+               alt="Search results with status, duration, size and matching lines">
+        </div>
+
+        <div class="le-feature flip">
+          <div>
+            <h3>Read it without getting lost</h3>
+            <p>Even multi-megabyte logs open instantly in a viewer built for reading them.</p>
+            <ul>
+              <li>Colour-coding by category: errors, debug, DML / SOQL, callouts, flow, limits.</li>
+              <li>Indentation by call depth, with categories you can show or hide.</li>
+              <li>Recognised Salesforce Ids become clickable links.</li>
+              <li>Find in log, copy, download.</li>
+            </ul>
+          </div>
+          <img class="le-shot" src="img/viewer.png" width="1280" height="800" loading="lazy"
+               alt="Log viewer with colour-coded SOQL lines, limit usage and category filters">
+        </div>
+
+        <div class="le-feature">
+          <div>
+            <h3>Switch logging on in two clicks</h3>
+            <p>See every active trace flag in the org in one table, and enable or extend logging for a user by 15, 30 or 60 minutes.</p>
+            <ul>
+              <li>Uses a dedicated debug level, or one that already exists in your org.</li>
+              <li>Disable it as soon as you're done.</li>
+            </ul>
+          </div>
+          <img class="le-shot" src="img/trace-flags.png" width="1280" height="800" loading="lazy"
+               alt="Active trace flags table and controls to extend logging for a user">
+        </div>
+
+        <div class="le-feature flip">
+          <div>
+            <h3>Several orgs open? No problem</h3>
+            <p>If you have a sandbox and production open in different tabs, you pick which org to work on. Enhanced Domains are handled automatically.</p>
+          </div>
+          <img class="le-shot" src="img/orgs.png" width="1280" height="800" loading="lazy"
+               alt="Org picker listing a sandbox and a production org">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="privacy">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Privacy</p>
+        <h2>Your logs stay between you and your org.</h2>
+        <p class="lede">The extension talks only to the Salesforce org you're already signed in to, using the session you already have.</p>
+      </div>
+      <ul class="le-privacy">
+        <li><strong>No backend</strong><span>There's no Fije server: everything runs in your browser.</span></li>
+        <li><strong>Nothing collected</strong><span>No sign-up, no analytics, no tracking.</span></li>
+        <li><strong>Nothing stored</strong><span>Logs live in memory in the tab and are discarded when you close it.</span></li>
+      </ul>
+      <p class="le-privacy-note">Details and permissions in the <a href="privacy/">privacy policy</a>.</p>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="how">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">How to use it</p>
+        <h2>Up and running in a minute.</h2>
+      </div>
+      <ol class="le-how">
+        <li><span><a href="https://chromewebstore.google.com/detail/fije-log-explorer-for-sal/pllfgkepokmgdkemmelpdlpdmlejajpg" rel="noopener">Add the extension to Chrome</a>.</span></li>
+        <li><span>Open your Salesforce org in a tab and sign in as usual.</span></li>
+        <li><span>Click the Fije Log Explorer icon. A new tab opens on the most recent logs.</span></li>
+      </ol>
+      <p class="le-small">Free. Not affiliated with Salesforce; "Salesforce" is a trademark of Salesforce, Inc.</p>
+    </div>
+  </section>
+
+  <section class="section contact" id="contact">
+    <svg class="thread" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <path d="M-60,520 C 260,560 420,420 660,450 S 1010,560 1320,360" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div class="container">
+      <p class="eyebrow">Made by Fije</p>
+      <h2>A problem bigger than a log?</h2>
+      <p>Log Explorer comes out of day-to-day work on Salesforce projects. Fije works alongside companies and consulting firms
+        on architecture, development, integrations and technical review. Feedback on the extension is welcome too.</p>
+      <div class="contact-links">
+        <a class="btn btn-primary" href="mailto:info@fije.it?subject=Fije%20Log%20Explorer">Write to info@fije.it</a>
+        <a class="btn btn-ghost" href="/en/">Discover Fije</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="foot-bottom">
+      <p>Fije &middot; VAT (P.IVA) 10997250963 &middot; REA MI 2573283 &middot; Milan, Italy</p>
+      <p><a href="/">fije.it</a> &middot; <a href="privacy/">Privacy policy</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var header = document.querySelector('.site-header');
+    function update() { header.classList.toggle('is-scrolled', (window.scrollY || 0) > 8); }
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  })();
+</script>
+
+</body>
+</html>

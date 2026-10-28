@@ -13,4 +13,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://fije.it/en/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://fije.it/"/>
   </url>
+  <url>
+    <loc>https://fije.it/log-explorer/</loc>
+  </url>
 </urlset>
