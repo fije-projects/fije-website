@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Fije Log Explorer for Salesforce — free Chrome extension for debug logs</title>
-<meta name="description" content="Search, read and switch on Salesforce debug logs from a browser tab, without going through Setup. Free Chrome extension by Fije: no account, no backend, no data collected.">
+<meta name="description" content="A free Chrome extension to find and read Salesforce debug logs without going through Setup. No account, no backend, no data collected.">
 <link rel="canonical" href="https://fije.it/log-explorer/">
 
 <meta name="theme-color" content="#FAF8FC" media="(prefers-color-scheme: light)">
@@ -16,7 +16,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Fije">
 <meta property="og:title" content="Fije Log Explorer for Salesforce">
-<meta property="og:description" content="Search, read and switch on Salesforce debug logs from a browser tab. Free Chrome extension, no data collected.">
+<meta property="og:description" content="A free Chrome extension to find and read Salesforce debug logs without going through Setup.">
 <meta property="og:url" content="https://fije.it/log-explorer/">
 <meta property="og:image" content="https://fije.it/log-explorer/img/search.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -40,61 +40,81 @@
 </script>
 
 <style>
-  .le-header .container { gap: 1rem; }
+  .le { --le-shell: 64rem; }
+  .le .container { max-width: var(--le-shell); }
   .le-header-links { display: flex; align-items: center; gap: 1.2rem; margin-left: auto; }
-  .le-header-links > a:not(.btn) { color: var(--muted); font-size: .95rem; }
+  .le-header-links > a:not(.btn) { color: var(--muted); font-size: .92rem; }
+  @media (max-width: 30rem) { .le-header-links > a:not(.btn) { display: none; } }
 
-  .le-hero { padding-block: clamp(3rem, 7vw, 5rem) clamp(3rem, 6vw, 4.5rem); }
-  .le-hero h1 { font-size: clamp(2.2rem, 5.4vw, 3.6rem); max-width: 18ch; margin: 0 0 1.2rem; }
-  .le-hero h1 em { font-style: normal; color: var(--brand-ink); }
-  .le-hero .hero-lead { max-width: 46ch; }
-  .le-hero .cta-row { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: .8rem; }
-  .le-facts { list-style: none; padding: 0; margin: 1.4rem 0 0; display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; color: var(--muted); font-size: .95rem; }
-  .le-facts li::before { content: "✓"; color: var(--brand-ink); font-weight: 700; margin-right: .45rem; }
+  /* intro */
+  .le-intro { padding-block: clamp(2.5rem, 6vw, 4rem) 2rem; }
+  .le-intro-grid { display: grid; gap: 1.5rem; align-items: end; }
+  @media (min-width: 52rem) { .le-intro-grid { grid-template-columns: 1fr auto; gap: 3rem; } }
+  .le-intro h1 { font-size: clamp(1.8rem, 3.4vw, 2.4rem); margin: 0 0 .8rem; }
+  .le-intro p { margin: 0; color: var(--muted); max-width: 52ch; }
+  .le-cta { display: grid; gap: .6rem; justify-items: start; }
+  @media (min-width: 52rem) { .le-cta { justify-items: end; } }
+  .le-facts { margin: 0; color: var(--muted); font-size: .88rem; }
 
-  .le-shot {
-    display: block; width: 100%; height: auto;
-    border: 1px solid var(--line); border-radius: 12px;
-    box-shadow: var(--shadow); background: var(--surface);
+  /* gallery, store-like */
+  .le-gallery { padding-bottom: clamp(3rem, 6vw, 4.5rem); }
+  .le-stage {
+    display: block; width: 100%; padding: 0; cursor: zoom-in;
+    border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+    background: var(--surface); box-shadow: var(--shadow);
   }
-  /* the hero already shows the whole search screen: zoom on the results table here */
-  .le-shot-crop { aspect-ratio: 1196 / 300; object-fit: cover; object-position: 50% 78%; }
-  .le-hero .le-shot { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
-
-  .le-features { display: grid; gap: clamp(3rem, 7vw, 5rem); }
-  .le-feature { display: grid; gap: 1.5rem; align-items: center; }
-  .le-feature h3 { font-size: clamp(1.4rem, 2.6vw, 1.75rem); margin: 0 0 .8rem; }
-  .le-feature p { margin: 0 0 .8rem; color: var(--muted); }
-  .le-feature ul { margin: 0; padding-left: 1.1rem; }
-  .le-feature li + li { margin-top: .45rem; }
-  @media (min-width: 60rem) {
-    .le-feature { grid-template-columns: 5fr 7fr; gap: 3.5rem; }
-    .le-feature.flip > :first-child { order: 2; }
+  .le-stage img { display: block; width: 100%; height: auto; }
+  .le-caption { margin: .9rem 0 0; color: var(--muted); font-size: .92rem; min-height: 1.4em; }
+  .le-thumbs { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: .75rem; grid-template-columns: repeat(4, 1fr); }
+  .le-thumbs button {
+    display: block; width: 100%; padding: 0; cursor: pointer;
+    border: 2px solid transparent; border-radius: 8px; overflow: hidden;
+    background: var(--surface); opacity: .65; transition: opacity .15s, border-color .15s;
   }
+  .le-thumbs button:hover { opacity: 1; }
+  .le-thumbs button[aria-current="true"] { opacity: 1; border-color: var(--brand); }
+  .le-thumbs img { display: block; width: 100%; height: auto; }
 
-  .le-privacy { display: grid; gap: 1.2rem; grid-template-columns: 1fr; margin: 0; padding: 0; list-style: none; }
-  .le-privacy li { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.4rem; }
-  .le-privacy strong { display: block; margin-bottom: .35rem; }
-  .le-privacy span { color: var(--muted); }
-  @media (min-width: 48rem) { .le-privacy { grid-template-columns: repeat(3, 1fr); } }
-  .le-privacy-note { margin: 1.5rem 0 0; color: var(--muted); font-size: .95rem; }
-
-  .le-how { counter-reset: how; list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; max-width: var(--measure); }
-  .le-how li { counter-increment: how; display: grid; grid-template-columns: 2.4rem 1fr; gap: 1rem; align-items: baseline; }
-  .le-how li::before {
-    content: counter(how); display: grid; place-items: center;
-    width: 2.4rem; height: 2.4rem; border-radius: 50%;
-    border: 1px solid var(--line-strong); color: var(--brand-ink);
-    font-family: var(--font-display); font-weight: 600;
+  /* lightbox */
+  .le-box { border: 0; padding: 0; max-width: none; max-height: none; width: 100vw; height: 100vh; background: rgba(20, 17, 26, .9); }
+  .le-box::backdrop { background: transparent; }
+  .le-box-inner { width: 100%; height: 100%; display: grid; place-items: center; padding: 3.5rem 4.5rem; }
+  .le-box img { max-width: 100%; max-height: 100%; width: auto; height: auto; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+  .le-box button {
+    position: absolute; border: 0; background: rgba(255,255,255,.12); color: #fff; cursor: pointer;
+    width: 2.75rem; height: 2.75rem; border-radius: 50%; font-size: 1.3rem; line-height: 1;
   }
-  .le-small { margin-top: 2rem; color: var(--muted); font-size: .9rem; max-width: var(--measure); }
+  .le-box button:hover { background: rgba(255,255,255,.25); }
+  .le-box .le-close { top: 1rem; right: 1rem; }
+  .le-box .le-prev { left: 1rem; top: 50%; transform: translateY(-50%); }
+  .le-box .le-next { right: 1rem; top: 50%; transform: translateY(-50%); }
+  @media (max-width: 40rem) { .le-box-inner { padding: 3.5rem .75rem; } .le-box .le-prev, .le-box .le-next { top: auto; bottom: 1rem; transform: none; } }
+
+  /* content */
+  .le-section { padding-block: clamp(2.5rem, 5vw, 3.5rem); border-top: 1px solid var(--line); }
+  .le-section h2 { font-size: clamp(1.3rem, 2.2vw, 1.6rem); margin: 0 0 1.4rem; }
+  .le-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.2rem 2.5rem; }
+  @media (min-width: 44rem) { .le-list { grid-template-columns: 1fr 1fr; } }
+  .le-list li { font-size: .97rem; color: var(--muted); }
+  .le-list strong { display: block; color: var(--ink); font-weight: 600; margin-bottom: .15rem; }
+  .le-text { margin: 0; color: var(--muted); font-size: .97rem; max-width: 62ch; }
+  .le-text + .le-text { margin-top: .8rem; }
+  .le-steps { margin: 0; padding-left: 1.2rem; color: var(--muted); font-size: .97rem; display: grid; gap: .4rem; }
+
+  .le-note {
+    margin-block: clamp(2.5rem, 5vw, 3.5rem) 0;
+    padding: 1.5rem 1.75rem; border-radius: var(--radius);
+    background: var(--tint); display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: center; justify-content: space-between;
+  }
+  .le-note p { margin: 0; max-width: 60ch; font-size: .97rem; }
+  .le-legal { margin: 1.5rem 0 0; color: var(--muted); font-size: .82rem; }
 </style>
 </head>
-<body>
+<body class="le">
 
 <a class="skip" href="#main">Skip to content</a>
 
-<header class="site-header le-header">
+<header class="site-header">
   <div class="container">
     <a class="brand" href="/" aria-label="Fije — home">
       <svg class="brand-mark" viewBox="180 100 300 800" aria-hidden="true">
@@ -114,135 +134,72 @@
 
 <main id="main">
 
-  <section class="le-hero">
-    <div class="container">
-      <p class="eyebrow">Free Chrome extension · Salesforce</p>
-      <h1>Salesforce debug logs, <em>without the trip through Setup.</em></h1>
-      <p class="hero-lead">Fije Log Explorer opens the latest logs of the org you're working on in their own tab.
-        You can search inside them, read them with colour-coding, and turn logging on for a user in a couple of clicks.</p>
-      <div class="cta-row">
-        <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/fije-log-explorer-for-sal/pllfgkepokmgdkemmelpdlpdmlejajpg" rel="noopener">Add to Chrome — it's free</a>
-        <a class="btn btn-ghost" href="#features">See what it does</a>
+  <section class="le-intro">
+    <div class="container le-intro-grid">
+      <div>
+        <p class="eyebrow">Free Chrome extension</p>
+        <h1>Fije Log Explorer for Salesforce</h1>
+        <p>A small tool to find and read Apex debug logs without clicking through Setup one log at a time.
+          We built it for our own projects. If it helps you too, you're welcome to use it.</p>
       </div>
-      <ul class="le-facts">
-        <li>No account</li>
-        <li>No backend</li>
-        <li>No data collected</li>
+      <div class="le-cta">
+        <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/fije-log-explorer-for-sal/pllfgkepokmgdkemmelpdlpdmlejajpg" rel="noopener">Add to Chrome</a>
+        <p class="le-facts">Free · No account · No data collected</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="le-gallery" aria-label="Screenshots">
+    <div class="container">
+      <button class="le-stage" type="button" aria-label="Enlarge screenshot">
+        <img id="leStage" src="img/search.png" width="1280" height="800" alt="">
+      </button>
+      <p class="le-caption" id="leCaption" aria-live="polite"></p>
+      <ul class="le-thumbs">
+        <li><button type="button" aria-current="true" data-src="img/search.png" data-caption="Recent logs with full-text search: matching lines are shown under each log."><img src="img/search.png" width="1280" height="800" alt="Log search"></button></li>
+        <li><button type="button" data-src="img/viewer.png" data-caption="Log viewer, colour-coded by event type and indented by call depth."><img src="img/viewer.png" width="1280" height="800" alt="Log viewer" loading="lazy"></button></li>
+        <li><button type="button" data-src="img/trace-flags.png" data-caption="Active trace flags, and logging for a user switched on or extended in a click."><img src="img/trace-flags.png" width="1280" height="800" alt="Trace flags" loading="lazy"></button></li>
+        <li><button type="button" data-src="img/orgs.png" data-caption="Several orgs open in different tabs: pick the one to work on."><img src="img/orgs.png" width="1280" height="800" alt="Org picker" loading="lazy"></button></li>
       </ul>
-      <img class="le-shot" src="img/search.png" width="1280" height="800"
-           alt="Fije Log Explorer: list of recent debug logs with a full-text search for SOQL and the matching lines previewed under each log">
     </div>
   </section>
 
-  <section class="section section-alt" id="features">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">What it does</p>
-        <h2>From "something broke" to the line that explains it.</h2>
-      </div>
-
-      <div class="le-features">
-        <div class="le-feature">
-          <div>
-            <h3>Find the right log</h3>
-            <p>The extension opens on the org's 30 most recent logs and starts downloading their contents right away, so there's no empty form to fill in.</p>
-            <ul>
-              <li>Filter by user and time window.</li>
-              <li>Full-text search inside the logs. Type a method, an exception or an Id and see the matching lines.</li>
-              <li>Auto-refresh while you re-run the transaction.</li>
-              <li>Exception count and a flag for truncated logs.</li>
-            </ul>
-          </div>
-          <img class="le-shot le-shot-crop" src="img/search.png" width="1280" height="800" loading="lazy"
-               alt="Search results with status, duration, size and matching lines">
-        </div>
-
-        <div class="le-feature flip">
-          <div>
-            <h3>Read it without getting lost</h3>
-            <p>Even multi-megabyte logs open instantly in a viewer built for reading them.</p>
-            <ul>
-              <li>Colour-coding by category: errors, debug, DML / SOQL, callouts, flow, limits.</li>
-              <li>Indentation by call depth, with categories you can show or hide.</li>
-              <li>Recognised Salesforce Ids become clickable links.</li>
-              <li>Find in log, copy, download.</li>
-            </ul>
-          </div>
-          <img class="le-shot" src="img/viewer.png" width="1280" height="800" loading="lazy"
-               alt="Log viewer with colour-coded SOQL lines, limit usage and category filters">
-        </div>
-
-        <div class="le-feature">
-          <div>
-            <h3>Switch logging on in two clicks</h3>
-            <p>See every active trace flag in the org in one table, and enable or extend logging for a user by 15, 30 or 60 minutes.</p>
-            <ul>
-              <li>Uses a dedicated debug level, or one that already exists in your org.</li>
-              <li>Disable it as soon as you're done.</li>
-            </ul>
-          </div>
-          <img class="le-shot" src="img/trace-flags.png" width="1280" height="800" loading="lazy"
-               alt="Active trace flags table and controls to extend logging for a user">
-        </div>
-
-        <div class="le-feature flip">
-          <div>
-            <h3>Several orgs open? No problem</h3>
-            <p>If you have a sandbox and production open in different tabs, you pick which org to work on. Enhanced Domains are handled automatically.</p>
-          </div>
-          <img class="le-shot" src="img/orgs.png" width="1280" height="800" loading="lazy"
-               alt="Org picker listing a sandbox and a production org">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="privacy">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Privacy</p>
-        <h2>Your logs stay between you and your org.</h2>
-        <p class="lede">The extension talks only to the Salesforce org you're already signed in to, using the session you already have.</p>
-      </div>
-      <ul class="le-privacy">
-        <li><strong>No backend</strong><span>There's no Fije server: everything runs in your browser.</span></li>
-        <li><strong>Nothing collected</strong><span>No sign-up, no analytics, no tracking.</span></li>
-        <li><strong>Nothing stored</strong><span>Logs live in memory in the tab and are discarded when you close it.</span></li>
+  <div class="container">
+    <section class="le-section">
+      <h2>What it does</h2>
+      <ul class="le-list">
+        <li><strong>Search logs</strong>By user and time window, with status, duration, size and an exception count for each log.</li>
+        <li><strong>Search inside logs</strong>Type a method, an exception or an Id and see the matching lines.</li>
+        <li><strong>Read them easily</strong>A fast viewer, colour-coded by event type, with clickable record Ids and find-in-log.</li>
+        <li><strong>Trace flags</strong>See the active ones and switch on or extend logging for a user.</li>
+        <li><strong>Auto-refresh</strong>Keeps the list up to date while you re-run a transaction.</li>
+        <li><strong>Several orgs</strong>Pick which open org to work on. Enhanced Domains are handled automatically.</li>
       </ul>
-      <p class="le-privacy-note">Details and permissions in the <a href="privacy/">privacy policy</a>.</p>
-    </div>
-  </section>
+    </section>
 
-  <section class="section section-alt" id="how">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">How to use it</p>
-        <h2>Up and running in a minute.</h2>
-      </div>
-      <ol class="le-how">
-        <li><span><a href="https://chromewebstore.google.com/detail/fije-log-explorer-for-sal/pllfgkepokmgdkemmelpdlpdmlejajpg" rel="noopener">Add the extension to Chrome</a>.</span></li>
-        <li><span>Open your Salesforce org in a tab and sign in as usual.</span></li>
-        <li><span>Click the Fije Log Explorer icon. A new tab opens on the most recent logs.</span></li>
+    <section class="le-section">
+      <h2>Privacy</h2>
+      <p class="le-text">The extension has no backend and collects no data: no sign-up, no analytics.
+        It uses the session of the Salesforce org you're already signed in to and talks only to that org.
+        Logs stay in memory in the tab and are discarded when you close it.</p>
+      <p class="le-text">Details and permissions: <a href="privacy/">privacy policy</a>.</p>
+    </section>
+
+    <section class="le-section">
+      <h2>How to use it</h2>
+      <ol class="le-steps">
+        <li><a href="https://chromewebstore.google.com/detail/fije-log-explorer-for-sal/pllfgkepokmgdkemmelpdlpdmlejajpg" rel="noopener">Add it to Chrome</a>.</li>
+        <li>Open your Salesforce org in a tab and sign in.</li>
+        <li>Click the Fije Log Explorer icon: a new tab opens on the most recent logs.</li>
       </ol>
-      <p class="le-small">Free. Not affiliated with Salesforce; "Salesforce" is a trademark of Salesforce, Inc.</p>
-    </div>
-  </section>
+    </section>
 
-  <section class="section contact" id="contact">
-    <svg class="thread" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <path d="M-60,520 C 260,560 420,420 660,450 S 1010,560 1320,360" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </svg>
-    <div class="container">
-      <p class="eyebrow">Made by Fije</p>
-      <h2>A problem bigger than a log?</h2>
-      <p>Log Explorer comes out of day-to-day work on Salesforce projects. Fije works alongside companies and consulting firms
-        on architecture, development, integrations and technical review. Feedback on the extension is welcome too.</p>
-      <div class="contact-links">
-        <a class="btn btn-primary" href="mailto:info@fije.it?subject=Fije%20Log%20Explorer">Write to info@fije.it</a>
-        <a class="btn btn-ghost" href="/en/">Discover Fije</a>
-      </div>
+    <div class="le-note">
+      <p>Ideas, bugs or something missing? Feedback is very welcome. And if you're working on a Salesforce project, that's what Fije does.</p>
+      <p><a href="mailto:info@fije.it?subject=Fije%20Log%20Explorer">info@fije.it</a> &middot; <a href="/en/">fije.it</a></p>
     </div>
-  </section>
+    <p class="le-legal">Not affiliated with Salesforce. "Salesforce" is a trademark of Salesforce, Inc.</p>
+  </div>
 
 </main>
 
@@ -255,12 +212,52 @@
   </div>
 </footer>
 
+<dialog class="le-box" id="leBox" aria-label="Screenshot">
+  <div class="le-box-inner"><img id="leBoxImg" src="" alt=""></div>
+  <button class="le-close" type="button" aria-label="Close">&times;</button>
+  <button class="le-prev" type="button" aria-label="Previous">&#8249;</button>
+  <button class="le-next" type="button" aria-label="Next">&#8250;</button>
+</dialog>
+
 <script>
   (function () {
     var header = document.querySelector('.site-header');
-    function update() { header.classList.toggle('is-scrolled', (window.scrollY || 0) > 8); }
-    window.addEventListener('scroll', update, { passive: true });
-    update();
+    function onScroll() { header.classList.toggle('is-scrolled', (window.scrollY || 0) > 8); }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Store-like gallery: thumbnails pick the main image, the main image opens a lightbox.
+    var thumbs = Array.prototype.slice.call(document.querySelectorAll('.le-thumbs button'));
+    var stage = document.getElementById('leStage');
+    var caption = document.getElementById('leCaption');
+    var box = document.getElementById('leBox');
+    var boxImg = document.getElementById('leBoxImg');
+    var current = 0;
+
+    function show(i) {
+      current = (i + thumbs.length) % thumbs.length;
+      var t = thumbs[current];
+      thumbs.forEach(function (b) { b.setAttribute('aria-current', String(b === t)); });
+      stage.src = t.dataset.src;
+      stage.alt = t.dataset.caption;
+      caption.textContent = t.dataset.caption;
+      boxImg.src = t.dataset.src;
+      boxImg.alt = t.dataset.caption;
+    }
+    thumbs.forEach(function (b, i) { b.addEventListener('click', function () { show(i); }); });
+    show(0);
+
+    document.querySelector('.le-stage').addEventListener('click', function () {
+      if (box.showModal) box.showModal();
+    });
+    box.querySelector('.le-close').addEventListener('click', function () { box.close(); });
+    box.querySelector('.le-prev').addEventListener('click', function () { show(current - 1); });
+    box.querySelector('.le-next').addEventListener('click', function () { show(current + 1); });
+    box.addEventListener('click', function (e) { if (e.target === box || e.target.classList.contains('le-box-inner')) box.close(); });
+    box.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') show(current - 1);
+      if (e.key === 'ArrowRight') show(current + 1);
+    });
   })();
 </script>
 
